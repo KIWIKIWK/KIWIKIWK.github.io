@@ -12,7 +12,7 @@ module.exports = {
     title: `주니어 개발자의 블로그`,
     description: `저만의 개발, 학습한 것들을 기록하는 공간입니다.`,
     author: `Geon`,
-    siteUrl: `https://my-website-link.com`, // 배포후 변경 예정
+    siteUrl: `https://kiwikiwk.github.io/`, // 배포후 변경 예정
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -34,7 +34,7 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-canonical-urls',
       options: {
-        siteUrl: 'https://my-website.com/',
+        siteUrl: 'https://kiwikiwk.github.io/',
         stripQueryString: true,
       },
     },
