@@ -1,5 +1,3 @@
-import CategoryList from 'components/Main/CategoryList'
-import PostList from 'components/Main/PostList'
 import { RefObject, useRef, useMemo, useState, useEffect } from 'react'
 import { PostListItemType } from 'types/PostItem.types'
 
@@ -16,6 +14,8 @@ const useInfiniteScroll = function (
 ): useInfiniteScrollType {
   const containerRef: RefObject<HTMLDivElement | null> =
     useRef<HTMLDivElement>(null)
+  const observer: RefObject<IntersectionObserver | null> =
+    useRef<IntersectionObserver>(null)
 
   const [count, setCount] = useState<number>(1)
 
@@ -34,15 +34,14 @@ const useInfiniteScroll = function (
     [selectedCategory],
   )
 
-  const observer: IntersectionObserver = new IntersectionObserver(
-    (entries, observer) => {
-      console.log(entries[0], entries)
+  useEffect(() => {
+    observer.current = new IntersectionObserver((entries, observer) => {
       if (!entries[0].isIntersecting) return
 
       setCount(value => value + 1)
-      observer.disconnect()
-    },
-  )
+      observer.unobserve(entries[0].target)
+    })
+  }, [])
 
   useEffect(() => setCount(1), [selectedCategory])
 
@@ -50,11 +49,12 @@ const useInfiniteScroll = function (
     if (
       NUMBER_OF_ITEMS_PER_PAGE * count >= postListByCategory.length ||
       containerRef.current === null ||
-      containerRef.current.children.length === 0
+      containerRef.current.children.length === 0 ||
+      observer.current === null
     )
       return
 
-    observer.observe(
+    observer.current.observe(
       containerRef.current.children[containerRef.current.children.length - 1],
     )
   }, [count, selectedCategory])
